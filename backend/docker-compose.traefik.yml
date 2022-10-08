@@ -8,7 +8,7 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
+      # - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
       - traefik.http.routers.traefik-dashboard-http.entrypoints=http
       - traefik.http.routers.traefik-dashboard-http.rule=Host(`rep-test.ru`) && Path(`/traefik`)
       - traefik.docker.network=traefik-public
