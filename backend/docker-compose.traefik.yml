@@ -8,18 +8,18 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      # - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
+      - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
       - traefik.http.routers.traefik-dashboard-http.entrypoints=http
-      - traefik.http.routers.traefik-dashboard-http.rule=Host(`rep-test.ru`) && Path(`/traefik`)
+      - traefik.http.routers.traefik-dashboard-http.rule=Host(`traefik.rep-test.ru`)
       - traefik.docker.network=traefik-public
-      # - traefik.http.routers.traefik-dashboard-https.entrypoints=https
-      # - traefik.http.routers.traefik-dashboard-https.rule=Host(`rep-test.ru`) && Path(`/traefik`)
-      # - traefik.http.routers.traefik-dashboard-https.tls=true
-      # - traefik.http.routers.traefik-dashboard-https.tls.certresolver=le
-      # - traefik.http.routers.traefik-dashboard-https.service=api@internal
-      # - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
-      # - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
-      # - traefik.http.routers.traefik-dashboard-http.middlewares=https-redirect
+      - traefik.http.routers.traefik-dashboard-https.entrypoints=https
+      - traefik.http.routers.traefik-dashboard-https.rule=Host(`traefik.rep-test.ru`)
+      - traefik.http.routers.traefik-dashboard-https.tls=true
+      - traefik.http.routers.traefik-dashboard-https.tls.certresolver=le
+      - traefik.http.routers.traefik-dashboard-https.service=api@internal
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+      - traefik.http.routers.traefik-dashboard-http.middlewares=https-redirect
       # - traefik.http.middlewares.admin-auth.basicauth.users=$${USERNAME?Variable not set}:$${HASHED_PASSWORD?Variable not set}
       # - traefik.http.routers.traefik-dashboard-https.middlewares=admin-auth
     volumes:
