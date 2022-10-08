@@ -7,7 +7,7 @@ services:
       - traefik.enable=true
       - traefik.http.services.app.loadbalancer.server.port=811
       - traefik.http.routes.app-http.entrypoints=http
-      - traefik.http.routes.app-http.rule=Host(`rep-test.ru`)
+      - traefik.http.routes.app-http.rule=Host(`rep-test.ru:811`)
       - traefik.docker.networks=traefik-public
     networks:
       - traefik-public
