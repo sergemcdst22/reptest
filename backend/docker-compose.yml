@@ -11,8 +11,6 @@ services:
       - traefik.docker.network=traefik-public
       - traefik.http.routers.app-https.entrypoints=https
       - traefik.http.routers.app-https.rule=Host(`rep-test.ru`)
-      - traefik.http.routers.app-https.tls.domains[0].main=`rep-test.ru` 
-      - traefik.http.routers.app-https.tls.domains[0].sans=`www.rep-test.ru`
       - traefik.http.routers.app-https.tls=true
       - traefik.http.routers.app-https.tls.certresolver=le
       - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
