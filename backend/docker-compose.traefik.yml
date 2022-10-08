@@ -9,7 +9,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     command: 
       - --providers.docker
-      - --providers.docker.exposebydefault=false
+      - --providers.docker.exposedbydefault=false
       - --entrypoints.http.address=:811
       - --accesslog
       - --log
