@@ -3,14 +3,14 @@ services:
   traefik:
     image: traefik:v2.9
     ports:
-      - 811:80
+      - 80:80
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     command: 
       - --providers.docker
       - --providers.docker.exposedbydefault=false
-      - --entrypoints.http.address=:811
+      - --entrypoints.http.address=:80
       - --accesslog
       - --log
     networks:
