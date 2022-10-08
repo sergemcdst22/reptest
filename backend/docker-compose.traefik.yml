@@ -10,10 +10,10 @@ services:
       - traefik.enable=true
       - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
       - traefik.http.routers.traefik-dashboard-http.entrypoints=http
-      - traefik.http.routers.traefik-dashboard-http.rule=Host(`traefik.rep-test.ru`)
+      - traefik.http.routers.traefik-dashboard-http.rule=Host(`rep-test.ru/traefik`)
       - traefik.docker.network=traefik-public
       - traefik.http.routers.traefik-dashboard-https.entrypoints=https
-      - traefik.http.routers.traefik-dashboard-https.rule=Host(`traefik.rep-test.ru`)
+      - traefik.http.routers.traefik-dashboard-https.rule=Host(`rep-test.ru/traefik`)
       - traefik.http.routers.traefik-dashboard-https.tls=true
       - traefik.http.routers.traefik-dashboard-https.tls.certresolver=le
       - traefik.http.routers.traefik-dashboard-https.service=api@internal
