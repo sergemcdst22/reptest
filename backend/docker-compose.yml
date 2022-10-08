@@ -10,7 +10,7 @@ services:
       - traefik.http.routers.app-http.rule=Host(`rep-test.ru`)
       - traefik.docker.network=traefik-public
       - traefik.http.routers.app-https.entrypoints=https
-      - traefik.http.routers.app-https.rule=Hist(`rep-test.ru`)
+      - traefik.http.routers.app-https.rule=Host(`rep-test.ru`)
       - traefik.http.routers.app-https.tls=true
       - traefik.http.routers.app-https.tls.certresolver=le
       - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
