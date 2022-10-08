@@ -7,10 +7,10 @@ services:
       - traefik.enable=true
       - traefik.http.services.front.loadbalancer.server.port=3000
       - traefik.http.routers.front-http.entrypoints=http
-      - traefik.http.routers.front-http.rule=Host(`front.rep-test.ru`)
+      - traefik.http.routers.front-http.rule=Host(`rep-test.ru`)
       - traefik.docker.network=traefik-public
       - traefik.http.routers.front-https.entrypoints=https
-      - traefik.http.routers.front-https.rule=Host(`front.rep-test.ru`)
+      - traefik.http.routers.front-https.rule=Host(`rep-test.ru`)
       - traefik.http.routers.front-https.tls=true
       - traefik.http.routers.front-https.tls.certresolver=le
       - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
