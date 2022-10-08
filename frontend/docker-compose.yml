@@ -5,17 +5,17 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.services.app.loadbalancer.server.port=3000
-      - traefik.http.routers.app-http.entrypoints=http
-      - traefik.http.routers.app-http.rule=Host(`front.rep-test.ru`)
+      - traefik.http.services.front.loadbalancer.server.port=3000
+      - traefik.http.routers.front-http.entrypoints=http
+      - traefik.http.routers.front-http.rule=Host(`front.rep-test.ru`)
       - traefik.docker.network=traefik-public
-      # - traefik.http.routers.app-https.entrypoints=https
-      # - traefik.http.routers.app-https.rule=Host(`front.rep-test.ru`)
-      # - traefik.http.routers.app-https.tls=true
-      # - traefik.http.routers.app-https.tls.certresolver=le
-      # - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
-      # - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
-      # - traefik.http.routers.app-http.middlewares=https-redirect
+      - traefik.http.routers.front-https.entrypoints=https
+      - traefik.http.routers.front-https.rule=Host(`front.rep-test.ru`)
+      - traefik.http.routers.front-https.tls=true
+      - traefik.http.routers.front-https.tls.certresolver=le
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+      - traefik.http.routers.front-http.middlewares=https-redirect
     networks:
       - traefik-public
 
