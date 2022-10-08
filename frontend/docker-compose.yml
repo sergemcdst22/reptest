@@ -16,6 +16,8 @@ services:
       - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
       - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
       - traefik.http.routers.front-http.middlewares=https-redirect
+    environment:
+      - WDS_SOCKET_PORT=0
     networks:
       - traefik-public
 

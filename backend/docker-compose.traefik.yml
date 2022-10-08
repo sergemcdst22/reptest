@@ -25,6 +25,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-public-certificates:/certificates
+    environment:
+      - WDS_SOCKET_PORT=0
     command: 
       - --providers.docker
       - --providers.docker.exposedbydefault=false
