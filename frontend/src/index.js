@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import ReactDOM from 'react-dom/client';
-const baseURL = "https://api.rep-test.ru";
+const baseURL = "http://localhost";
 
 export default function App() {
   const [post, setPost] = React.useState(null);
@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <div>
-      <h1>HI</h1>
+      <h1>{post.Hello}</h1>
     </div>
   );
 }

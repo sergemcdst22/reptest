@@ -6,16 +6,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-origins = [
-    "http://localhost",
-    "http://localhost:3000",
-    '172.19.0.2:35452'
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=['*'],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -23,7 +17,7 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"Hello": "Worlds"}
 
 
 @app.get("/items/{item_id}")
