@@ -3,5 +3,15 @@ services:
   backend:
     build: ./
     restart: always
-    ports:
-      - 811:80
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.app.loadbalancer.server.port=811
+      - traefik.http.routes.app-http.entrypoints=http
+      - traefik.http.routes.app-http.rule=Host(`rep-test.ru`)
+      - traefik.docker.networks=traefik-public
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    external: true

@@ -1,0 +1,21 @@
+services:
+
+  traefik:
+    image: traefik:v2.9
+    ports:
+      - 811:80
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: 
+      - --providers.docker
+      - --providers.docker.exposebydefault=false
+      - --entrypoints.http.address=:811
+      - --accesslog
+      - --log
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    external: true
