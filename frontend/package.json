@@ -1,20 +1,22 @@
 {
-  "name": "react",
+  "name": "react-beautiful-dnd-simple-board",
+  "homepage": ".",
   "version": "1.0.0",
-  "description": "React example starter project",
-  "keywords": [
-    "react",
-    "starter"
-  ],
+  "description": "",
+  "keywords": [],
   "main": "src/index.js",
   "dependencies": {
-    "generate-avatar": "*",
-    "lorem-ipsum": "*",
-    "react": "*",
-    "react-beautiful-dnd": "*",
-    "react-dom": "*",
-    "react-scripts": "*",
-    "styled-components": "*"
+    "@atlaskit/theme": "^12.1.9",
+    "@emotion/core": "10.0.10",
+    "@emotion/styled": "10.0.10",
+    "react": "16.8.3",
+    "react-beautiful-dnd": "10.1.1",
+    "react-dom": "16.8.3",
+    "react-scripts": "2.1.8",
+    "styled-components": "4.2.0"
+  },
+  "devDependencies": {
+    "typescript": "3.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
