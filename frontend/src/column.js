@@ -32,7 +32,7 @@ export default class Column extends Component {
     const quotes = this.props.quotes;
     const index = this.props.index;
     return (
-      <Draggable draggableId={title} index={index}>
+      <div>
         {(provided, snapshot) => (
           <Container ref={provided.innerRef} {...provided.draggableProps}>
             <Header isDragging={snapshot.isDragging}>
@@ -55,7 +55,7 @@ export default class Column extends Component {
             />
           </Container>
         )}
-      </Draggable>
+      </div>
     );
   }
 }
