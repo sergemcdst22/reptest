@@ -2,6 +2,7 @@ from typing import Union
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .get_price import get_price_high
 
 
 app = FastAPI()
@@ -17,7 +18,7 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"Hello": "Worlds"}
+    return {"Hello": get_price_high()}
 
 
 @app.get("/items/{item_id}")
