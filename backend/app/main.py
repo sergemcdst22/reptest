@@ -77,6 +77,7 @@ def delete_article(id: int):
 
 @app.post("/articules/{id}")
 def add_new_id(id: int):
+    articules = set()
     try:
         with open("list.txt", "r") as f:
             articules = set([int(l.split(" --- ")[0]) for l in f.readlines()])
