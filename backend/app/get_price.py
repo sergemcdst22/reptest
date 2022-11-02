@@ -2,7 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 import re
-
+from datetime import datetime
+from pytz import timezone
 
 
 def remove_spaces(s: str):
@@ -19,12 +20,16 @@ def pick_right_numbers(old_n):
             return None
 
 def get_price_high(articul=74249377):
-
+    fmt = "%Y-%m-%d %H:%M:%S %Z%z"
+    
     try:
-        money = pick_right_numbers(remove_spaces(get_price(articul)))
-        return money
+        money, now_time = get_price(articul)
+        money = pick_right_numbers(remove_spaces(money))
+        return money, now_time.strftime(fmt)
     except Exception as e:
-        return e
+        zone = 'Europe/Moscow'
+        now_time = datetime.now(timezone(zone))
+        return e, now_time.strftime(fmt)
 
 
 def get_price(articul=74249377):
@@ -40,9 +45,11 @@ def get_price(articul=74249377):
     browser = webdriver.Chrome(options=options) 
     browser.get(url) 
     price: WebElement = None
+    zone = 'Europe/Moscow'
     while not price:
         try:    
-            price = browser.find_element(By.CLASS_NAME, 'price-block__final-price') 
+            price = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
+            now_time = datetime.now(timezone(zone))
         except:
             continue
 
@@ -50,7 +57,7 @@ def get_price(articul=74249377):
 
     browser.quit()
             
-    return txt
+    return txt, now_time
 
     
 

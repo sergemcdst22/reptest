@@ -17,5 +17,5 @@ app.add_middleware(
 
 @app.get("/{id}")
 def read_price(id: int):
-    return {id: get_price_high(id)} if id > 0 else {"default": get_price_high(id)}
+    return {id: get_price_high(id)}
  
