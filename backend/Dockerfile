@@ -15,7 +15,7 @@ RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 ENV DISPLAY=:99
 
 # install selenium
-RUN pip install selenium==3.8.0
+RUN pip install selenium==4.5.0
 
 COPY ./requirements.txt /app/requirements.txt
 
