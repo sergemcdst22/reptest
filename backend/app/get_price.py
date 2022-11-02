@@ -23,15 +23,17 @@ def get_price_high(articul=74249377):
     fmt = "%Y-%m-%d %H:%M:%S %Z%z"
     
     try:
-        money, now_time = get_price(articul)
+        money, now_time, name = get_price(articul)
         if money == 0:
-            return "Нет в наличии", now_time.strftime(fmt)
+            return "Нет в наличии", now_time.strftime(fmt), name
+        if money == -1:
+            return "Товара с таким артикулом нет в базе (или ошибка загрузки, для проверки повторите запрос)", now_time.strftime(fmt), name
         money = pick_right_numbers(remove_spaces(money))
-        return money, now_time.strftime(fmt)
+        return money, now_time.strftime(fmt), name
     except Exception as e:
         zone = 'Europe/Moscow'
         now_time = datetime.now(timezone(zone))
-        return e, now_time.strftime(fmt)
+        return e, now_time.strftime(fmt), '?'
 
 
 def get_price(articul=74249377):
@@ -51,18 +53,28 @@ def get_price(articul=74249377):
     soldout = None
     try:
         soldout = browser.find_element(By.CLASS_NAME, 'sold-out-product__text')
+        names = browser.find_elements(By.TAG_NAME, 'h1')
+        name = ' '.join([n.get_attribute("innerText") for n in names])
+        span = browser.find_element(By.XPATH, '//span[@class="hide-mobile"]')
+        name = span.get_attribute("innerText") + "/" + name
     except: ...
     if soldout:
-        return 0, datetime.now(timezone(zone))
-    price: WebElement = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
+        return 0, datetime.now(timezone(zone)), name
+    price = None
+    try:
+        price: WebElement = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
+    except:
+        ...
+    if not price:
+        return -1, datetime.now(timezone(zone)), '?'
     now_time = datetime.now(timezone(zone))
 
-    txt = price.get_attribute("innerText")  
+    txt = price.get_attribute("innerText")
+    names = browser.find_elements(By.TAG_NAME, 'h1')
+    name = ' '.join([n.get_attribute("innerText") for n in names])
+    span = browser.find_element(By.XPATH, '//span[@class="hide-mobile"]')
+    name = span.get_attribute("innerText") + "/" + name
 
     browser.quit()
             
-    return txt, now_time
-
-    
-
-print(get_price_high())
+    return txt, now_time, name
