@@ -24,6 +24,8 @@ def get_price_high(articul=74249377):
     
     try:
         money, now_time = get_price(articul)
+        if money == 0:
+            return "Нет в наличии", now_time.strftime(fmt)
         money = pick_right_numbers(remove_spaces(money))
         return money, now_time.strftime(fmt)
     except Exception as e:
@@ -44,9 +46,15 @@ def get_price(articul=74249377):
     options.add_argument('--disable-dev-shm-usage')        
     browser = webdriver.Chrome(options=options) 
     browser.implicitly_wait(2)
-    browser.get(url) 
-    price: WebElement = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
+    browser.get(url)    
     zone = 'Europe/Moscow'
+    soldout = None
+    try:
+        soldout = browser.find_element(By.CLASS_NAME, 'sold-out-product__text')
+    except: ...
+    if soldout:
+        return 0, datetime.now(timezone(zone))
+    price: WebElement = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
     now_time = datetime.now(timezone(zone))
 
     txt = price.get_attribute("innerText")  
