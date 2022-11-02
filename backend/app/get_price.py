@@ -43,15 +43,11 @@ def get_price(articul=74249377):
     options.add_argument('--disable-gpu')
     options.add_argument('--disable-dev-shm-usage')        
     browser = webdriver.Chrome(options=options) 
+    browser.implicitly_wait(2)
     browser.get(url) 
-    price: WebElement = None
+    price: WebElement = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
+    now_time = datetime.now(timezone(zone))
     zone = 'Europe/Moscow'
-    while not price:
-        try:    
-            price = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
-            now_time = datetime.now(timezone(zone))
-        except:
-            continue
 
     txt = price.get_attribute("innerText")  
 
