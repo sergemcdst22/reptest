@@ -33,7 +33,7 @@ def read_price(id: int):
     try:
         if not last_price or last_price != price:
             with open(f"art{id}.txt", "w", encoding="utf-8") as f:
-                f.writelines([f"{price} --- {time} --- {name}\n"] + lines)
+                f.writelines([f"{price} --- {time}\n"] + lines)
     except:
         ...
 
@@ -43,8 +43,11 @@ def read_price(id: int):
 
 @app.get("/articules")
 def show_all_ids():
-    with open("list.txt", "r") as f:
-        return f.readlines()
+    try:
+        with open("list.txt", "r") as f:
+            return f.readlines()
+    except:
+        return []
 
 
 @app.get("/articules/{id}")
@@ -76,19 +79,19 @@ def delete_article(id: int):
 def add_new_id(id: int):
     try:
         with open("list.txt", "r") as f:
-            articules = set([int(l) for l in f.readlines()])
+            articules = set([int(l.split(" --- ")[0]) for l in f.readlines()])
     except: 
         ...
     if not id in articules:
-        articules.add(id)
         with open(f"art{id}.txt", 'x', encoding="utf-8"):
             ...
         try:
             price, time, name = read_price(id)
             with open(f"art{id}.txt", 'w', encoding="utf-8") as f:
-                f.writelines([f"{price} --- {time} --- {name}\n"])
+                f.writelines([f"{price} --- {time}\n"])            
+            articules.add(f"{id} --- {name}")
         except:
-            ...
+            articules.add(f"{id} --- {'?'}")
     new_articules = [f"{a}\n" for a in articules]
     with open("list.txt", "w+") as f:
         f.writelines(new_articules)
