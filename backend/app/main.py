@@ -2,7 +2,7 @@ from typing import Union
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.get_price import get_price_high
+from get_price import get_price_high
 
 
 app = FastAPI()
