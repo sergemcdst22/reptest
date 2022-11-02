@@ -37,8 +37,8 @@ def get_price(articul=74249377):
     options.add_argument('--window-size=1920,1080')
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
+    options.add_argument('--disable-dev-shm-usage')        
     browser = webdriver.Chrome(options=options) 
-    browser.implicitly_wait(1)
     browser.get(url) 
     price: WebElement = None
     while not price:
