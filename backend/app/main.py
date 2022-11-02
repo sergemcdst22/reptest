@@ -1,10 +1,6 @@
-from typing import Union
-
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+
 from get_price import get_price_high
 
 
@@ -16,18 +12,10 @@ app.add_middleware(
     allow_origins=['*'],
     allow_methods=["*"],
     allow_headers=["*"],
-)
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-templates = Jinja2Templates(directory="templates")
+) 
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": get_price_high()}
-
-
-@app.get("/items/{id}", response_class=HTMLResponse)
-async def read_item(request: Request, id: str):
-    return templates.TemplateResponse("item.html", {"request": request, "id": id})
+@app.get("/{id}")
+def read_price(id: int):
+    return {id: get_price_high(id)} if id > 0 else {"default": get_price_high(id)}
+ 
