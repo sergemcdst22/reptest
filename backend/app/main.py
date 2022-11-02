@@ -20,20 +20,30 @@ app.add_middleware(
 def read_price(id: int):
 
     price, time, name =  get_price_high(id)
-
+    old_name = "?"
     last_price = None
     lines = []
     try:
         with open(f"art{id}.txt", "r", encoding="utf-8") as f:
             lines = f.readlines()
-            last_price = lines[0].split(" --- ")[0]
+            last_price = lines[1].split(" --- ")[0]
+            old_name = lines[0]
+            print(name)
     except:
         ...
 
     try:
         if not last_price or last_price != price:
+
             with open(f"art{id}.txt", "w", encoding="utf-8") as f:
-                f.writelines([f"{price} --- {time}\n"] + lines)
+                f.writelines([lines[0]] + [f"{price} --- {time}\n"] + lines[1:])
+        
+        if old_name == "?" and name != "?":
+
+            with open(f"art{id}.txt", "w", encoding="utf-8") as f:
+                f.writelines([f"{name}\n"] + lines[1:])
+
+        
     except:
         ...
 
@@ -61,18 +71,21 @@ def read_article_file(id: int):
 
 @app.delete("/articules/{id}")
 def delete_article(id: int):
-    with open("list.txt", "r") as f:
-        articules = set([int(l) for l in f.readlines()])
-    if id in articules:
-        articules.remove(id)
-    new_articules = [f"{a}\n" for a in articules]
-    with open("list.txt", "w+") as f:
-        f.writelines(new_articules)
     try:
-        os.remove(f"art{id}.txt")
+        with open("list.txt", "r") as f:
+            articules = set([int(l) for l in f.readlines()])
+        if id in articules:
+            articules.remove(id)
+        new_articules = [f"{a}\n" for a in articules]
+        with open("list.txt", "w+") as f:
+            f.writelines(new_articules)
+        try:
+            os.remove(f"art{id}.txt")
+        except:
+            ...
+        return new_articules
     except:
-        ...
-    return new_articules
+        return []
 
 
 @app.post("/articules/{id}")
@@ -80,19 +93,19 @@ def add_new_id(id: int):
     articules = set()
     try:
         with open("list.txt", "r") as f:
-            articules = set([int(l.split(" --- ")[0]) for l in f.readlines()])
+            articules = set([int(l) for l in f.readlines()])
     except: 
         ...
     if not id in articules:
+        articules.add(id)
         with open(f"art{id}.txt", 'x', encoding="utf-8"):
             ...
         try:
             price, time, name = read_price(id)
             with open(f"art{id}.txt", 'w', encoding="utf-8") as f:
-                f.writelines([f"{price} --- {time}\n"])            
-            articules.add(f"{id} --- {name}")
-        except:
-            articules.add(f"{id} --- {'?'}")
+                f.writelines([f"{name}\n"] + [f"{price} --- {time}\n"])
+        except Exception as e:
+            print(e)
     new_articules = [f"{a}\n" for a in articules]
     with open("list.txt", "w+") as f:
         f.writelines(new_articules)
