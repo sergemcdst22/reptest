@@ -46,8 +46,8 @@ def get_price(articul=74249377):
     browser.implicitly_wait(2)
     browser.get(url) 
     price: WebElement = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
-    now_time = datetime.now(timezone(zone))
     zone = 'Europe/Moscow'
+    now_time = datetime.now(timezone(zone))
 
     txt = price.get_attribute("innerText")  
 
