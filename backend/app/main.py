@@ -88,7 +88,7 @@ def delete_article(id: int):
         return []
 
 
-@app.post("/articules/")
+@app.get("/addarticule/{id}")
 def add_new_id(id: int):
     articules = set()
     try:
