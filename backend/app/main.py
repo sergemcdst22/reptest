@@ -33,7 +33,7 @@ def read_price(id: int):
         ...
 
     try:
-        if not last_price or last_price != price:
+        if not last_price or last_price != price and len(lines) > 0:
 
             with open(f"art{id}.txt", "w", encoding="utf-8") as f:
                 f.writelines([lines[0]] + [f"{price} --- {time}\n"] + lines[1:])
