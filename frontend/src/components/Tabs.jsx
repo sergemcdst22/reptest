@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Tabs.css';
@@ -41,18 +41,18 @@ const Tabs = () => {
     useEffect(() => {
         async function fetchCurTabs() {
             let curTabs = await axios.get("https://api.rep-test.ru/articules");
-            console.log(curTabs.data);
+            //console.log(curTabs.data);
             curTabs = curTabs.data;
             let newTabs = [];
             for (let curTab of curTabs) {
                 let nameAndPrices = await axios.get(`https://api.rep-test.ru/articules/${curTab}`);
                 nameAndPrices = nameAndPrices.data;
                 let [name, ...prices] = nameAndPrices;
-                console.log(name);
-                console.log(prices);
+                name = name.trim();
+                prices = prices.map(p => p.trim());
                 newTabs.push({
                     id: curTab,
-                    tabTitle: curTab + "(" + name + ")",
+                    tabTitle: curTab + " (" + name + ")",
                     title: name,
                     content: prices
                 })
@@ -74,8 +74,8 @@ const Tabs = () => {
         let nameAndPrices = await axios.get(`https://api.rep-test.ru/articules/${text}`);
         nameAndPrices = nameAndPrices.data;
         let [name, ...prices] = nameAndPrices;
-        console.log(name);
-        console.log(prices);
+        name = name.trim();
+        prices = prices.map(p => p.trim());
         newTabs.push({
             id: text,
             tabTitle: text + "(" + name + ")",
@@ -106,13 +106,14 @@ const Tabs = () => {
 
 
     const addInfo = async () => {
+        console.log("add info: " + interval.current + "; tabs count: " + tabs.length);
         let newTabs = [...tabs];
         for (let i = 0; i < tabs.length; i++) {
             const tab = newTabs[i];
             const prieDateNameInfo = await axios.get(`https://api.rep-test.ru/read_price/${tab.id}`);
-            console.log(prieDateNameInfo);
+            //console.log(prieDateNameInfo);
             let [price, date, name] = prieDateNameInfo.data;
-            console.log(`price=${price} date=${date} name=${name}`);
+            //console.log(`price=${price} date=${date} name=${name}`);
             if (tab.title == "?" && name != "?")
                 tab.title = name;
             if (tab.content.length > 0 && tab.content[0].split(" --- ")[0] != price) {
@@ -124,8 +125,10 @@ const Tabs = () => {
     };
 
     useEffect(() => {
-        interval.current = setTimeout(addInfo, 2000);
+        interval.current = setTimeout(addInfo, 60000);
+        console.log("use effect set timeout : " + interval.current + "; tabs count: " + tabs.length);
         return () => {
+            console.log("use effect clear) : " + interval.current + "; tabs count: " + tabs.length);
             clearTimeout(interval.current); // cleanup
         };
     }, [tabs]);
@@ -150,7 +153,7 @@ const Tabs = () => {
             <div className='content'>
                 {tabs.map((tab, i) =>
                     <div key={i} className="nar">
-                        {currentTab === `${tab.id}` && <div><p className='title'>{tab.title}</p><ul className='contentsc'>{tab.content.map((c) => <li>{c}</li>)}</ul></div>}
+                        {currentTab === `${tab.id}` && <div><p className='title'>{tab.title}</p><ul className='contentsc'>{tab.content.map((c, ii) => <li key={ii}>{c}</li>)}</ul></div>}
                     </div>
                 )}
 

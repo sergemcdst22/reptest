@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 import re
 from datetime import datetime
 from pytz import timezone
-
+from time import sleep
 
 def remove_spaces(s: str):
     return ''.join(s.split())
@@ -61,10 +61,14 @@ def get_price(articul=74249377):
     if soldout:
         return 0, datetime.now(timezone(zone)), name
     price = None
-    try:
-        price: WebElement = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
-    except:
-        ...
+    i = 0
+    while not price and i < 5:
+        try:
+            price: WebElement = browser.find_element(By.CLASS_NAME, 'price-block__final-price')
+        except:
+            ...
+        if not price:
+            sleep(5)
     if not price:
         return -1, datetime.now(timezone(zone)), '?'
     now_time = datetime.now(timezone(zone))
