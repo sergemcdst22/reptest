@@ -19,21 +19,20 @@ app.add_middleware(
 @app.get("/read_price/{id}")
 def read_price(id: int):
 
-    price, time, name =  get_price_high(id)
+    price, time, name = get_price_high(id)
     old_name = "?"
     last_price = None
     lines = []
     try:
         with open(f"art{id}.txt", "r", encoding="utf-8") as f:
             lines = f.readlines()
-            last_price = lines[1].split(" --- ")[0]
-            old_name = lines[0]
-            print(name)
+            last_price = lines[1].split(" --- ")[0] 
+            old_name = lines[0] 
     except:
         ...
 
     try:
-        if not last_price or last_price != price and len(lines) > 0:
+        if not last_price or str(last_price) != str(price) and len(lines) > 0:
 
             with open(f"art{id}.txt", "w", encoding="utf-8") as f:
                 f.writelines([lines[0]] + [f"{price} --- {time}\n"] + lines[1:])
