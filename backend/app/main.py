@@ -98,8 +98,12 @@ def add_new_id(id: int):
         ...
     if not id in articules:
         articules.add(id)
-        with open(f"art{id}.txt", 'x', encoding="utf-8"):
+        try:
+            os.remove(f"art{id}.txt")
+        except OSError:
             ...
+        with open(f"art{id}.txt", 'x', encoding="utf-8"):
+            ... 
         try:
             price, time, name = read_price(id)
             with open(f"art{id}.txt", 'w', encoding="utf-8") as f:
