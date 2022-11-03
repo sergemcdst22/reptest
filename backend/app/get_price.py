@@ -69,6 +69,7 @@ def get_price(articul=74249377):
             ...
         if not price:
             sleep(5)
+            i += 1
     if not price:
         return -1, datetime.now(timezone(zone)), '?'
     now_time = datetime.now(timezone(zone))
