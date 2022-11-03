@@ -1,0 +1,10 @@
+.contentsc {
+    height: 300px;
+    max-height: 300px;
+    width: 100%;
+    border-radius: 1px;
+}
+
+.tyty {
+    color: black;
+}
