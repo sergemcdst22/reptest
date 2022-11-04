@@ -169,7 +169,6 @@ const Tabs = () => {
 
         return () => {
             if (interval.current) {
-                console.log
                 clearTimeout(interval.current);
                 interval.current = null;
             }
