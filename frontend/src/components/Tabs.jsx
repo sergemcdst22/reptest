@@ -19,9 +19,9 @@ function FormTodo({ addTodo }) {
         <Form onSubmit={handleSubmit}>
             <Form.Group>
                 <Form.Label><b>Добавить артикул</b></Form.Label>
-                <Form.Control type="number" className="input" value={value} onChange={e => setValue(e.target.value)} placeholder="введите артикул" />
+                <Form.Control type="number" id="inputArt" className="input" value={value} onChange={e => setValue(e.target.value)} placeholder="введите артикул" />
             </Form.Group>
-            <Button variant="primary mb-3" type="submit">
+            <Button variant="primary mb-3" type="submit" id="btnAdd">
                 Добавить
             </Button>
         </Form>
@@ -31,6 +31,7 @@ function FormTodo({ addTodo }) {
 const Tabs = () => {
 
     const [currentTab, setCurrentTab] = useState('1');
+
     const interval = useRef(setTimeout(() => { }, 0));
 
 
@@ -69,6 +70,19 @@ const Tabs = () => {
 
 
     const addTab = async (text) => { 
+
+        if (interval.current) {
+            clearTimeout(interval.current);
+            interval.current = null;
+        }
+        
+        const styleDiv = document.getElementById("root").style.cursor;
+        document.getElementById("root").style.cursor = "wait";
+        const styleInput = document.getElementById("inputArt").style.cursor;
+        document.getElementById("inputArt").style.cursor = "wait";
+        const styleButton = document.getElementById("btnAdd").style.cursor;
+        document.getElementById("btnAdd").style.cursor = "wait";
+        document.getElementById("btnAdd").disabled = true;
         await axios.get(`https://api.rep-test.ru/addarticule/${text}`);
         let newTabs = [...tabs];
         let nameAndPrices = await axios.get(`https://api.rep-test.ru/articules/${text}`);
@@ -78,23 +92,36 @@ const Tabs = () => {
         prices = prices.map(p => p.trim());
         newTabs.push({
             id: text,
-            tabTitle: text + "(" + name + ")",
+            tabTitle: text + " (" + name + ")",
             title: name,
             content: prices
         });
+        
         setTabs(newTabs);
         setTimeout(() => {
             const n = newTabs.length - 1;
             document.getElementsByClassName("tabs")[0].children[n].click();
+            document.getElementById("root").style.cursor = styleDiv;
+            document.getElementById("inputArt").style.cursor = styleInput;
+            document.getElementById("btnAdd").style.cursor = styleButton;
+            document.getElementById("btnAdd").disabled = false;
         }, 300);
     };
 
 
     const removeCur = async () => {
+
+        if (interval.current) {
+            clearTimeout(interval.current);
+            interval.current = null;
+        }
+
         await axios.delete(`https://api.rep-test.ru/articules/${currentTab}`);
         const newTabs = tabs.filter(function (item) {
             return item.id != currentTab;
         })
+        
+
         setTabs(newTabs);
 
         setTimeout(() => {
@@ -106,6 +133,12 @@ const Tabs = () => {
 
 
     const addInfo = async () => {
+
+        if (interval.current) {
+            clearTimeout(interval.current);
+            interval.current = null;
+        }
+
         console.log("add info: " + interval.current + "; tabs count: " + tabs.length);
         let newTabs = [...tabs];
         for (let i = 0; i < tabs.length; i++) {
@@ -122,14 +155,24 @@ const Tabs = () => {
             }
         }
         setTabs(newTabs);
+        
+        interval.current = setTimeout(addInfo, 2000);
     };
 
     useEffect(() => {
-        interval.current = setTimeout(addInfo, 60000);
-        console.log("use effect set timeout : " + interval.current + "; tabs count: " + tabs.length);
+
+        if (interval.current) {
+            clearTimeout(interval.current);
+            interval.current = null;
+        }
+        interval.current = setTimeout(addInfo, 2000);
+
         return () => {
-            console.log("use effect clear) : " + interval.current + "; tabs count: " + tabs.length);
-            clearTimeout(interval.current); // cleanup
+            if (interval.current) {
+                console.log
+                clearTimeout(interval.current);
+                interval.current = null;
+            }
         };
     }, [tabs]);
 
