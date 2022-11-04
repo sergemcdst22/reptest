@@ -19,14 +19,21 @@ def pick_right_numbers(old_n):
         else:
             return None
 
+
+
+
 def get_price_high(articul=74249377):
 
     fmt = "%Y-%m-%d %H:%M:%S %Z%z"
     
     try:
         money, now_time, name = get_price(articul)
-        if money <= 0:
-            return money, now_time.strftime(fmt), name 
+        try:
+            j = int(money)
+            if j == 0:
+                return j, now_time.strftime(fmt), name
+        except:
+            ...
         money = pick_right_numbers(remove_spaces(money))
         return money, now_time.strftime(fmt), name
     
