@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
+import requests
 
 from get_price import get_price_high
 
@@ -114,6 +115,11 @@ def add_new_id(id: int):
         f.writelines(new_articules)
     return new_articules
 
+
+@app.post("/atg")
+def save_atg(atg: str):
+    print(atg)
+    requests.get(f'https://api.telegram.org/bot5705652962:AAFeq-ix85amdZPGihD9LU1GAcy-eZo9KEs/sendMessage?chat_id=5159856006&text={atg}')
 
 
  
