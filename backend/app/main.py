@@ -180,6 +180,9 @@ async def save_atg(code: str, scope: str, state: str):
 
         async with aiofiles.open(f'{state}.txt', mode='w') as f:
             await f.write(f"{user_is_following} {user_is_subscribed}")
+
+        
+        return f"{user_data['login']}, благодарим за регистрацию. Скоро вам придет ссылка от бота"
     
 
     
