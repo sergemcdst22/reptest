@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
-import requests
+import httpx
 
 from get_price import get_price_high
 
@@ -116,10 +116,16 @@ def add_new_id(id: int):
     return new_articules
 
 
-@app.post("/atg")
-def save_atg(atg: str):
-    print(atg)
-    requests.get(f'https://api.telegram.org/bot5705652962:AAFeq-ix85amdZPGihD9LU1GAcy-eZo9KEs/sendMessage?chat_id=5159856006&text={atg}')
+@app.get("/atg")
+async def save_atg(code: str, scope: str, state: str):
 
+    async with httpx.AsyncClient() as client:
+
+        r = await client.post('https://id.twitch.tv/oauth2/token', headers=['Content-Type: application/x-www-form-urlencoded'], data=f'client_id=lfe9vvdv7dihqm4e6i4dr4elon2gvk&client_secret=jidrdopja5f4savde4nhe4a0n6mpn1&code={code}&grant_type=authorization_code&redirect_uri=https://api.rep-test.ru/atg')
+        return r.text
+    
+
+    
+    
 
  
