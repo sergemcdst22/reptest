@@ -118,7 +118,7 @@ def add_new_id(id: int):
 
 
 def is_following(d):
-    return d and type(d) is dict and d["total"] > 0 and d['data'][0]['followed_at']
+    return d and type(d) is dict and d["total"] > 0 and str(d['data'][0]['followed_at'])[:10]
 
 
 def is_subscribed(d):
@@ -135,13 +135,14 @@ async def read(id):
         
         txt = txt.split()
 
-        user_is_following = False if txt[0] == "False" else txt[0][:10]
-        user_is_subscribed = txt[1] == "True"
+        login = txt[0]
+        user_is_following = False if txt[1] == "False" else txt[1]
+        user_is_subscribed = txt[2] == "True"
 
-        return (user_is_following, user_is_subscribed)
+        return (login, user_is_following, user_is_subscribed)
 
     except:
-        return (False, False)
+        return False
 
 
 
@@ -179,7 +180,7 @@ async def save_atg(code: str, scope: str, state: str):
         user_is_subscribed = is_subscribed(r.json())
 
         async with aiofiles.open(f'{state}.txt', mode='w') as f:
-            await f.write(f"{user_is_following} {user_is_subscribed}")
+            await f.write(f"{user_data['login']} {user_is_following} {user_is_subscribed}")
 
         
         return f"{user_data['login']}, благодарим за регистрацию. Скоро вам придет ссылка от бота"
