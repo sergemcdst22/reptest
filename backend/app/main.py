@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import httpx
+import aiofiles
 
 from get_price import get_price_high
 
@@ -116,13 +117,69 @@ def add_new_id(id: int):
     return new_articules
 
 
+def is_following(d):
+    return d and type(d) is dict and d["total"] > 0 and d['data'][0]['followed_at']
+
+
+def is_subscribed(d):
+    return d and type(d) is dict and not 'error' in d
+
+
+@app.get("/atg/{id}")
+async def read(id):
+    try:
+        txt = ''
+
+        async with aiofiles.open(f"{id}.txt", mode='r') as f:
+            txt = await f.read()        
+        
+        txt = txt.split()
+
+        user_is_following = False if txt[0] == "False" else txt[0][:10]
+        user_is_subscribed = txt[1] == "True"
+
+        return (user_is_following, user_is_subscribed)
+
+    except:
+        return (False, False)
+
+
+
 @app.get("/atg")
 async def save_atg(code: str, scope: str, state: str):
 
     async with httpx.AsyncClient() as client:
 
-        r = await client.post('https://id.twitch.tv/oauth2/token', headers=['Content-Type: application/x-www-form-urlencoded'], data=f'client_id=lfe9vvdv7dihqm4e6i4dr4elon2gvk&client_secret=jidrdopja5f4savde4nhe4a0n6mpn1&code={code}&grant_type=authorization_code&redirect_uri=https://api.rep-test.ru/atg')
-        return r.text
+        client_id = 'lfe9vvdv7dihqm4e6i4dr4elon2gvk'
+        client_secret = 'jidrdopja5f4savde4nhe4a0n6mpn1'
+        redirect_uri = 'https://api.rep-test.ru/atg'
+
+        aninya_id = '163110751'
+
+        r = await client.post('https://id.twitch.tv/oauth2/token', 
+            headers={'Content-Type': 'application/x-www-form-urlencoded'}, 
+            data=f'{client_id=!s}&{client_secret=!s}&{code=!s}&grant_type=authorization_code&{redirect_uri=!s}')
+         
+
+        token = r.json()["access_token"]
+
+        r = await client.get('https://id.twitch.tv/oauth2/validate', headers={'Authorization': f'OAuth {token}'})
+
+        user_data = r.json()
+ 
+
+        r = await client.get(f'https://api.twitch.tv/helix/users/follows?to_id={aninya_id}&from_id={user_data["user_id"]}',
+            headers={'Authorization': f'Bearer {token}', 'Client-Id': f'{client_id}'})
+
+        user_is_following = is_following(r.json())
+
+        r = await client.get(f'https://api.twitch.tv/helix/subscriptions/user?broadcaster_id={aninya_id}&user_id={user_data["user_id"]}',
+            headers={'Authorization': f'Bearer {token}', 'Client-Id': f'{client_id}'})
+            
+        user_is_subscribed = is_subscribed(r.json())
+
+        async with aiofiles.open(f'{state}.txt', mode='w') as f:
+            await f.write(f"{user_is_following} {user_is_subscribed}")
     
 
     
