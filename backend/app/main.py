@@ -127,22 +127,16 @@ def is_subscribed(d):
 
 @app.get("/atg/{id}")
 async def read(id):
+    txt = ''
+
     try:
-        txt = ''
-
         async with aiofiles.open(f"{id}.txt", mode='r') as f:
-            txt = await f.read()        
-        
-        txt = txt.split()
-
-        login = txt[0]
-        user_is_following = False if txt[1] == "False" else txt[1]
-        user_is_subscribed = txt[2] == "True"
-
-        return (login, user_is_following, user_is_subscribed)
-
+            txt = await f.read()  
     except:
-        return False
+        ...
+
+    return txt  
+        
 
 
 
