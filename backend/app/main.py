@@ -1,8 +1,10 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import httpx
 import aiofiles
+from PIL import Image, ImageFont, ImageDraw 
 
 from get_price import get_price_high
 
@@ -178,9 +180,67 @@ async def save_atg(code: str, scope: str, state: str):
 
         
         return f"{user_data['login']}, благодарим за регистрацию. Скоро вам придет ссылка от бота"
-    
+
+def wrap(s_g: str, max_len: int):
+    spl = s_g.split()
+    results = [""]
+    i = 0
+    cur_len = 0
+    for s in spl:
+        if cur_len + len(s) < max_len:
+            results[i] += " " + s
+            cur_len += len(s)
+        else:
+            results[i] = results[i].strip()
+            results.append("")
+            i += 1
+            cur_len = 0
+
+    results[-1] = results[-1].strip()
+
+    return results
+
+def fill_template(anketa_imya, anketa_familia, anketa_webinar: str):
+    name = f"{anketa_familia} {anketa_imya}"
+
+
+    anketa_webinar = anketa_webinar.split('Лектор')
+
+    lector_name = anketa_webinar[-1].strip()
+
+    anketa_webinar = anketa_webinar[0].strip()
+
+    date = anketa_webinar[-8:]
+
+    anketa_webinar = anketa_webinar[:-8].strip()
+
+    anketa_webinar = anketa_webinar.split(".")
+
+    for i in range(len(anketa_webinar)):
+        s = anketa_webinar[i].strip()
+        if len(s) > 50:
+            s = "\n".join(wrap(s, 40))
+        anketa_webinar[i] = s
+
+    anketa_webinar = ".\n".join(anketa_webinar)
+
+    my_image = Image.open("template.png")
+    font = ImageFont.truetype('MYRIADPRO-BOLD.OTF', 26, encoding='utf-8')  
+    font2 = ImageFont.truetype('MYRIADPRO-REGULAR.OTF', 17, encoding='utf-8') 
+ 
+    image_editable = ImageDraw.Draw(my_image)
+    image_editable.text((80, 325), name, (0, 0, 0), font=font)
+    image_editable.text((80, 423), anketa_webinar, (0, 0, 0), font=font)
+    image_editable.text((80, 633), lector_name, (255, 255, 255), font=font)
+    image_editable.text((127, 744), date, (255, 255, 255), font=font2)
+    my_image.save("result.png")
+ 
 
     
-    
+@app.get("/course_cert")
+def save_atg(anketa_imya: str, anketa_familia: str, anketa_webinar: str):
+    fill_template(anketa_imya, anketa_familia, anketa_webinar)
+    return FileResponse("result.png")
+
 
  

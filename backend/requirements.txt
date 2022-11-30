@@ -2,3 +2,4 @@ sklearn
 bokeh
 httpx
 aiofiles
+pillow
