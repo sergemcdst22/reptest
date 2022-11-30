@@ -192,7 +192,7 @@ def wrap(s_g: str, max_len: int):
             cur_len += len(s)
         else:
             results[i] = results[i].strip()
-            results.append("")
+            results.append(s)
             i += 1
             cur_len = 0
 
