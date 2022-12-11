@@ -1,14 +1,11 @@
 from datetime import datetime, date, timedelta
 import pytz
-from typing import List, Tuple, Optional
-import locale
+from typing import List, Tuple, Optional 
 
 from sqlmodel import Session, select, create_engine
 
 from models import Igloo, User, Order, OrderType, Info
-
-
-locale.setlocale(locale.LC_MONETARY, "uz_UZ.UTF-8")
+ 
 
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
@@ -520,7 +517,7 @@ def text_data(order: int) -> str:
 
         guests_count = "" if not order.guests_count else f", кол-во гостей: до {order.guests_count}"
 
-        return f"Иглу: {igloo.name}, план: {plan.name}, дата: {order.date}{guests_count}, часы: {order.start_time}-{order.end_time}, общая сумма: {locale.currency(order.price, grouping=True)}"
+        return f"Иглу: {igloo.name}, план: {plan.name}, дата: {order.date}{guests_count}, часы: {order.start_time}-{order.end_time}, общая сумма: {f'{order.price:,}.00'}"
 
 
 def get_all_order_types() -> List[OrderType]:
