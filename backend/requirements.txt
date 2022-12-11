@@ -3,3 +3,5 @@ bokeh
 httpx
 aiofiles
 pillow
+aiogram
+sqlmodel
